@@ -1,22 +1,20 @@
 import os
 import tensorflow as tf
+from tensorflow.keras import Model
 
 
-class BaseModel:
+class BaseModel(Model):
     
     def __init__(self, config):
+        super(BaseModel, self).__init__(**kwargs)
         self.config = config
-        self.model = None
         
-    def save_params(self, name="model", version="0001"):
-        model_path = os.path.join(name, ".", version)
-        print("Saving model weights...\n")
-        self.save_weights(model_path, save_format="tf")
-        print("Model weights saved...\n")
+    def save_params(self):
+        path = os.path.join("checkpoints", self.config.name, self.config.version)
+        os.makedirs(path, exist_ok=True)
+        self.save_weights(path)
         
-    def load_params(self, path="saved_models/model.0001"):
-        print("Loading model weight...\n")
+    def load_params(self):
+        path = os.path.join("checkpoints", self.config.name, self.config.version)
         self.load_weights(path)
-        print("Model weights loaded...\n")
-
         
